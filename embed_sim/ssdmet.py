@@ -8,6 +8,7 @@ from pyscf import gto, scf, ao2mo
 
 from embed_sim.BNO_bath import get_RMP2_bath, get_UMP2_bath, get_ROMP2_bath
 from embed_sim import iao_helper
+from embed_sim import ic_helper
 
 import os
 
@@ -295,25 +296,14 @@ class SSDMET(lib.StreamObject):
             fh5['es_dm'] = self.es_dm
         return 
     
-    def lowdin_orth(self, restore_imp = False, iaopao = False):
+    def lowdin_orth(self,  = False, iaopao = False):
         # lowdin orthonormalize
         caolo, cloao = lowdin_orth(self.mol)
         if restore_imp:
             imp_idx = self.imp_idx
-            mask_env = np.ones(len(caolo), dtype=bool)
-            mask_env[imp_idx] = False
-
-            Q1 = cloao[:, imp_idx]
-            Q1, _ = np.linalg.qr(Q1) # orthonormalize
-            P = np.eye(*cloao.shape) - Q1 @ Q1.T.conj()
-            B = P @ cloao[:, mask_env]
-            from scipy.linalg import svd
-            U, S, Vh = svd(B, full_matrices=False)
-
-            Q = np.zeros(cloao.shape)
-            Q[:, imp_idx] = Q1
-            Q[:, mask_env] = U[:, 0: cloao.shape[0] - len(imp_idx)]
-            cloao = Q.T.conj() @ cloao
+            S_ovlp = self.mf_or_cas.get_ovlp()
+            caolo = ic_helper.ic_orthogonalization(S_ovlp, imp_idx, self.mol)
+            cloao = np.linalg.inv(caolo)
             
         if iaopao:
             caolo = iao_helper.localize_iao(self.mol, self.mf_or_cas, lo2ao)
