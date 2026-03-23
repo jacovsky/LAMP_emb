@@ -5,7 +5,7 @@ from pyscf import gto
 import numpy as np
 from pyscf.scf import hf
 from pyscf.dft import rks
-from src.AIMP3 import AIMPEnvLoader
+from src.AIMP3_DMET_SCEI import AIMPEnvLoader
 Ang2Bohr = 1.8897259886
 
 # energies
