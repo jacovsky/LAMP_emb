@@ -38,13 +38,14 @@ class DFSSDMET(ssdmet.SSDMET):
     """
     Density fitting single-shot DMET class
     """
-    def __init__(self,mf_or_cas,title='untitled',imp_idx=None, threshold=1e-12, with_df=None, es_natorb=True, bath_option=None, verbose=logger.INFO,ncas=None,nelecas=None,spin=None):
+    def __init__(self,mf_or_cas,title='untitled',imp_idx=None, readmp2=readmp2, threshold=1e-12, with_df=None, es_natorb=True, bath_option=None, verbose=logger.INFO,ncas=None,nelecas=None,spin=None):
         self.mf_or_cas = mf_or_cas
         self.mol = self.mf_or_cas.mol
         self.title = title
         self.max_mem = mf_or_cas.max_memory # TODO
         self.verbose = verbose # TODO
         self.with_df = with_df
+        self.readmp2 = readmp2
         self.log = lib.logger.new_logger(self.mol, self.verbose)
         self.ncas = ncas
         self.nelecas = nelecas
