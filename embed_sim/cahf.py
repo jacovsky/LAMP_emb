@@ -146,7 +146,7 @@ def CAHF_get_occ(ncas, nelecas):
         mo_occ = np.zeros(len(mo_ea))
         mo_occ[:ncore] = 2
         mo_occ[ncore:ncore+ncas] = nelecas/ncas
-        print(mo_occ)
+        
         if mf.verbose >= logger.INFO and nocc < nmo and ncore > 0:
             ehomo = max(mo_energy[mo_occ> 0])
             elumo = min(mo_energy[mo_occ==0])
